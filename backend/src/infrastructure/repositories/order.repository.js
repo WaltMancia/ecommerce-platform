@@ -38,3 +38,17 @@ export const findOrderById = async (id, userId) => {
         include: [orderInclude],
     });
 };
+
+export const updateOrderStatus = async (stripePaymentId, status) => {
+    await Order.update(
+        { status },
+        { where: { stripe_payment_id: stripePaymentId } }
+    );
+};
+
+export const updateOrderPaymentId = async (orderId, stripePaymentId) => {
+    await Order.update(
+        { stripe_payment_id: stripePaymentId },
+        { where: { id: orderId } }
+    );
+};
