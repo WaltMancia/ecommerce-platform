@@ -59,8 +59,11 @@ export const createProduct = async (productData) => {
     return await Product.create(productData);
 };
 
-export const updateProduct = async (id, productData) => {
-    await Product.update(productData, { where: { id } });
+export const updateProduct = async (id, productData, transaction = null) => {
+    await Product.update(productData, {
+        where: { id },
+        ...(transaction && { transaction }), // Solo la pasa si existe
+    });
     return await findProductById(id);
 };
 
