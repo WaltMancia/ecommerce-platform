@@ -1,35 +1,50 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Routes, Route, Navigate } from 'react-router-dom';
+import MainLayout from './layouts/MainLayout.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import AdminRoute from './components/AdminRoute.jsx';
 
-function App() {
-  const [count, setCount] = useState(0)
+// Páginas
+import LoginPage from './pages/auth/LoginPage.jsx';
+import RegisterPage from './pages/auth/RegisterPage.jsx';
 
+// Páginas pendientes — las crearemos en los siguientes pasos
+// Por ahora usamos placeholders
+const HomePage = () => <h1 className="text-2xl font-bold">Inicio — Próximamente</h1>;
+const ProductsPage = () => <h1 className="text-2xl font-bold">Productos — Próximamente</h1>;
+const CartPage = () => <h1 className="text-2xl font-bold">Carrito — Próximamente</h1>;
+const OrdersPage = () => <h1 className="text-2xl font-bold">Órdenes — Próximamente</h1>;
+const AdminPage = () => <h1 className="text-2xl font-bold">Admin — Próximamente</h1>;
+
+const App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Routes>
+      {/* Rutas públicas sin layout */}
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/registro" element={<RegisterPage />} />
 
-export default App
+      {/* Rutas con layout (navbar + contenido) */}
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/productos" element={<ProductsPage />} />
+
+        {/* Rutas protegidas — requieren login */}
+        <Route path="/carrito" element={
+          <ProtectedRoute><CartPage /></ProtectedRoute>
+        } />
+        <Route path="/mis-ordenes" element={
+          <ProtectedRoute><OrdersPage /></ProtectedRoute>
+        } />
+
+        {/* Rutas de admin — requieren rol admin */}
+        <Route path="/admin/*" element={
+          <AdminRoute><AdminPage /></AdminRoute>
+        } />
+      </Route>
+
+      {/* Cualquier ruta desconocida redirige al inicio */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+};
+
+export default App;
