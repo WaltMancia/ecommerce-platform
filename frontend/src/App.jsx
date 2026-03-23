@@ -6,12 +6,12 @@ import AdminRoute from './components/AdminRoute.jsx';
 // Páginas
 import LoginPage from './pages/auth/LoginPage.jsx';
 import RegisterPage from './pages/auth/RegisterPage.jsx';
+import HomePage from './pages/HomePage.jsx';
+import ProductsPage from './pages/products/ProductsPage.jsx';
+import ProductDetailPage from './pages/products/ProductDetailPage.jsx';
+import CartPage from './pages/cart/CartPage.jsx';
 
 // Páginas pendientes — las crearemos en los siguientes pasos
-// Por ahora usamos placeholders
-const HomePage = () => <h1 className="text-2xl font-bold">Inicio — Próximamente</h1>;
-const ProductsPage = () => <h1 className="text-2xl font-bold">Productos — Próximamente</h1>;
-const CartPage = () => <h1 className="text-2xl font-bold">Carrito — Próximamente</h1>;
 const OrdersPage = () => <h1 className="text-2xl font-bold">Órdenes — Próximamente</h1>;
 const AdminPage = () => <h1 className="text-2xl font-bold">Admin — Próximamente</h1>;
 
@@ -26,6 +26,7 @@ const App = () => {
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/productos" element={<ProductsPage />} />
+        <Route path="/productos/:slug" element={<ProductDetailPage />} />
 
         {/* Rutas protegidas — requieren login */}
         <Route path="/carrito" element={
