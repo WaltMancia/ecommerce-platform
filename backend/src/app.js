@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './infrastructure/docs/swagger.js';
 import authRoutes from './interfaces/routes/auth.routes.js';
 import productRoutes from './interfaces/routes/product.routes.js';
 import cartRoutes from './interfaces/routes/cart.routes.js';
@@ -31,6 +33,11 @@ app.use((req, res, next) => {
         express.json()(req, res, next);
     }
 });
+
+// Documentación Swagger — disponible en /api/docs
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+    customSiteTitle: 'E-Commerce API Docs',
+}));
 
 // Versionamiento de API: /api/v1 es la ruta base para todas las rutas de autenticación
 app.use('/api/v1/auth', authRoutes);
