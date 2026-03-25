@@ -23,7 +23,7 @@ const HomePage = () => (
                     Descubre nuestra colección de productos con la mejor calidad y precios.
                 </p>
                 <Link to="/productos">
-                    <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100">
+                    <Button size="lg" variant="secondary">
                         <ShoppingBag size={18} />
                         Ver productos
                     </Button>

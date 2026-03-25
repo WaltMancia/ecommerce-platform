@@ -2,7 +2,6 @@ import stripe from '../../infrastructure/utils/stripe.utils.js';
 import * as orderRepository from '../../infrastructure/repositories/order.repository.js';
 
 export const createPaymentIntentService = async (userId, orderId) => {
-    // Buscamos la orden y verificamos que pertenece al usuario
     const order = await orderRepository.findOrderById(orderId, userId);
 
     if (!order) {
@@ -17,18 +16,36 @@ export const createPaymentIntentService = async (userId, orderId) => {
         throw error;
     }
 
-    // Creamos el PaymentIntent en Stripe
-    // amount va en centavos: $99.99 → 9999
-    const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(parseFloat(order.total) * 100),
-        currency: 'usd',
-        metadata: {
-            orderId: order.id.toString(),
-            userId: userId.toString(),
-        },
-    });
+    // IDEMPOTENCIA: si la orden ya tiene un PaymentIntent, lo reutilizamos
+    // Así el usuario puede recargar la página sin generar cobros duplicados
+    if (order.stripe_payment_id) {
+        const existingIntent = await stripe.paymentIntents.retrieve(
+            order.stripe_payment_id
+        );
+        return {
+            clientSecret: existingIntent.client_secret,
+            orderId: order.id,
+            amount: parseFloat(order.total),
+        };
+    }
 
-    // Guardamos el paymentIntent.id en la orden para relacionarlos después
+    // Si no tiene PaymentIntent, creamos uno nuevo
+    // La idempotencyKey de Stripe garantiza que aunque la petición
+    // llegue dos veces al mismo tiempo, solo se crea un PaymentIntent
+    const paymentIntent = await stripe.paymentIntents.create(
+        {
+            amount: Math.round(parseFloat(order.total) * 100),
+            currency: 'usd',
+            metadata: {
+                orderId: order.id.toString(),
+                userId: userId.toString(),
+            },
+        },
+        {
+            idempotencyKey: `order_${orderId}_user_${userId}`,
+        }
+    );
+
     await orderRepository.updateOrderPaymentId(orderId, paymentIntent.id);
 
     return {

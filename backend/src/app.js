@@ -7,6 +7,8 @@ import cartRoutes from './interfaces/routes/cart.routes.js';
 import orderRoutes from './interfaces/routes/order.routes.js';
 import paymentRoutes from './interfaces/routes/payment.routes.js';
 import { errorHandler } from './interfaces/middlewares/error.middleware.js';
+import categoryRoutes from './interfaces/routes/category.routes.js';
+
 
 dotenv.config();
 
@@ -36,6 +38,8 @@ app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/cart', cartRoutes);
 app.use('/api/v1/orders', orderRoutes);
 app.use('/api/v1/payments', paymentRoutes);
+app.use('/api/v1/categories', categoryRoutes);
+
 
 // Health check 
 app.get('/health', (req, res) => {

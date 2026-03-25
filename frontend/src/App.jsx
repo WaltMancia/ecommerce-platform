@@ -10,10 +10,9 @@ import HomePage from './pages/HomePage.jsx';
 import ProductsPage from './pages/products/ProductsPage.jsx';
 import ProductDetailPage from './pages/products/ProductDetailPage.jsx';
 import CartPage from './pages/cart/CartPage.jsx';
-
-// Páginas pendientes — las crearemos en los siguientes pasos
-const OrdersPage = () => <h1 className="text-2xl font-bold">Órdenes — Próximamente</h1>;
-const AdminPage = () => <h1 className="text-2xl font-bold">Admin — Próximamente</h1>;
+import OrdersPage from './pages/orders/OrdersPage.jsx';
+import OrderDetailPage from './pages/orders/OrderDetailPage.jsx';
+import AdminPage from './pages/admin/AdminPage.jsx';
 
 const App = () => {
   return (
@@ -34,6 +33,10 @@ const App = () => {
         } />
         <Route path="/mis-ordenes" element={
           <ProtectedRoute><OrdersPage /></ProtectedRoute>
+        } />
+
+        <Route path="/mis-ordenes/:id" element={
+          <ProtectedRoute><OrderDetailPage /></ProtectedRoute>
         } />
 
         {/* Rutas de admin — requieren rol admin */}

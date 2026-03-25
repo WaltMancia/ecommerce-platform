@@ -14,6 +14,18 @@ const router = Router();
 
 // Rutas públicas — cualquiera puede ver productos
 router.get('/', getProducts);
+
+// Añade esta ruta antes de /:slug para que no haya conflicto
+router.get('/id/:id', async (req, res, next) => {
+    try {
+        const product = await import('../../infrastructure/repositories/product.repository.js')
+            .then(m => m.findProductById(req.params.id));
+        if (!product) return res.status(404).json({ message: 'Producto no encontrado' });
+        res.json(product);
+    } catch (error) {
+        next(error);
+    }
+});
 router.get('/:slug', getProductBySlug);
 
 // Rutas protegidas — solo admins pueden gestionar productos
