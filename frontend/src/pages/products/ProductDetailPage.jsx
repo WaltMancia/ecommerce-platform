@@ -63,8 +63,18 @@ const ProductDetailPage = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 {/* Imagen */}
-                <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center">
-                    <Package size={80} className="text-gray-300" />
+                <div className="aspect-square rounded-3xl overflow-hidden bg-gray-100">
+                    {product.imageUrl ? (
+                        <img
+                            src={product.imageUrl}
+                            alt={product.name}
+                            className="w-full h-full object-cover"
+                        />
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+                            <Package size={80} className="text-gray-300" />
+                        </div>
+                    )}
                 </div>
 
                 {/* Info */}

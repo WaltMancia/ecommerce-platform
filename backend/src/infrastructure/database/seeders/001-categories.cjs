@@ -2,6 +2,15 @@
 
 module.exports = {
     async up(queryInterface) {
+        // Verificamos si ya existen categorías antes de insertar
+        const [results] = await queryInterface.sequelize.query(
+            'SELECT COUNT(*) as count FROM categories'
+        );
+        const count = results[0].count;
+
+        // Si ya hay datos, no hacemos nada — idempotencia
+        if (count > 0) return;
+
         await queryInterface.bulkInsert('categories', [
             {
                 name: 'Electronics',

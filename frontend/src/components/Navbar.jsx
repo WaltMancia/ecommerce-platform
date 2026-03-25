@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Package, LogOut, User, LayoutDashboard } from 'lucide-react';
+import { ShoppingCart, LogOut, User, LayoutDashboard } from 'lucide-react';
 import useAuthStore from '../store/authStore.js';
 import useCartStore from '../store/cartStore.js';
 import useAuth from '../hooks/useAuth.js';
@@ -13,7 +13,7 @@ const Navbar = () => {
         <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
                 <Link to="/" className="flex items-center gap-2 font-bold text-gray-900 text-lg">
-                    <Package size={22} className="text-gray-700" />
+                    <img src="/shopping.svg" alt="Mi Tienda" className="w-5 h-5" />
                     Mi Tienda
                 </Link>
 

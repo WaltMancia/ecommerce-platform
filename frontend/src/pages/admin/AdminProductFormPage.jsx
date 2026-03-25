@@ -15,6 +15,9 @@ const AdminProductFormPage = () => {
     const { id } = useParams(); // Si hay id, es edición; si no, es creación
     const navigate = useNavigate();
     const isEditing = !!id;
+    const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [currentImage, setCurrentImage] = useState(null);
 
     const [form, setForm] = useState({
         name: '', description: '', price: '', stock: '', category_id: '',
@@ -47,6 +50,7 @@ const AdminProductFormPage = () => {
                         stock: data.stock,
                         category_id: data.category?.id || '',
                     });
+                    setCurrentImage(data.imageUrl || null);
                 } catch {
                     toast.error('Producto no encontrado');
                     navigate('/admin/productos');
@@ -62,16 +66,47 @@ const AdminProductFormPage = () => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
+    // Función para manejar la selección de imagen
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        setImageFile(file);
+        // Creamos una URL temporal para previsualizar antes de subir
+        setImagePreview(URL.createObjectURL(file));
+    };
+
+    // Función para subir la imagen después de crear/editar el producto
+    const uploadImage = async (productId) => {
+        if (!imageFile) return;
+        const formData = new FormData();
+        formData.append('image', imageFile);
+
+        await fetch(`${import.meta.env.VITE_API_URL}/products/${productId}/image`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+            body: formData,
+            // Nota: NO pongas Content-Type manualmente con FormData
+            // El navegador lo establece automáticamente con el boundary correcto
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
+            let savedProduct;
             if (isEditing) {
-                await updateProductService(id, form);
+                savedProduct = await updateProductService(id, form);
                 toast.success('Producto actualizado');
             } else {
-                await createProductService(form);
+                savedProduct = await createProductService(form);
                 toast.success('Producto creado');
+            }
+            // Subimos la imagen si el usuario seleccionó una
+            if (imageFile) {
+                await uploadImage(savedProduct.id || id);
             }
             navigate('/admin/productos');
         } catch (error) {
@@ -140,6 +175,31 @@ const AdminProductFormPage = () => {
                         rows={3}
                         className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 resize-none"
                     />
+                </div>
+                {/* Campo de imagen */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Imagen del producto
+                    </label>
+
+                    {/* Preview de imagen actual o nueva */}
+                    {(imagePreview || currentImage) && (
+                        <div className="mb-3 w-32 h-32 rounded-xl overflow-hidden border border-gray-200">
+                            <img
+                                src={imagePreview || currentImage}
+                                alt="Preview"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                    )}
+
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-gray-900 file:text-white hover:file:bg-gray-700 file:cursor-pointer"
+                    />
+                    <p className="text-xs text-gray-400 mt-1">JPG, PNG o WebP. Máximo 5MB.</p>
                 </div>
 
                 <div className="flex gap-3 pt-2">

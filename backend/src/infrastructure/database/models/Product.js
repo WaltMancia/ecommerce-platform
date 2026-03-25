@@ -40,6 +40,11 @@ const Product = sequelize.define(
             type: DataTypes.BOOLEAN,
             defaultValue: true,
         },
+        // Añade este campo junto a los demás
+        image_url: {
+            type: DataTypes.STRING(500),
+            allowNull: true,
+        },
     },
     {
         tableName: 'products',

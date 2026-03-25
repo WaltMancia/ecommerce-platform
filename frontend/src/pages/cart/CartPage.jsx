@@ -60,9 +60,17 @@ const CartPage = () => {
                 <div className="lg:col-span-2 space-y-4">
                     {cart.items.map((item) => (
                         <div key={item.id} className="bg-white rounded-2xl border border-gray-100 p-4 flex gap-4">
-                            {/* Imagen placeholder */}
-                            <div className="w-20 h-20 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <ShoppingBag size={24} className="text-gray-300" />
+                            {/* Imagen del producto */}
+                            <div className="w-20 h-20 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden">
+                                {item.product.imageUrl ? (
+                                    <img
+                                        src={item.product.imageUrl}
+                                        alt={item.product.name}
+                                        className="w-full h-full object-cover"
+                                    />
+                                ) : (
+                                    <ShoppingBag size={24} className="text-gray-300" />
+                                )}
                             </div>
 
                             <div className="flex-1 min-w-0">

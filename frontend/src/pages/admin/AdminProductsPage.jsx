@@ -79,8 +79,16 @@ const AdminProductsPage = () => {
                                 <tr key={product.id} className="hover:bg-gray-50 transition-colors">
                                     <td className="px-5 py-3">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-9 h-9 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                <Package size={16} className="text-gray-400" />
+                                            <div className="w-9 h-9 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
+                                                {product.imageUrl ? (
+                                                    <img
+                                                        src={product.imageUrl}
+                                                        alt={product.name}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <Package size={16} className="text-gray-400" />
+                                                )}
                                             </div>
                                             <span className="font-medium text-gray-900 truncate max-w-[200px]">
                                                 {product.name}

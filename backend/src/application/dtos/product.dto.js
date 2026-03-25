@@ -5,6 +5,7 @@ export const productListDTO = (product) => ({
     slug: product.slug,
     price: parseFloat(product.price), // DECIMAL viene como string desde MySQL
     stock: product.stock,
+    imageUrl: product.image_url || null,
     category: product.category
         ? { id: product.category.id, name: product.category.name }
         : null,
@@ -18,6 +19,7 @@ export const productDetailDTO = (product) => ({
     description: product.description,
     price: parseFloat(product.price),
     stock: product.stock,
+    imageUrl: product.image_url || null,
     isActive: product.is_active,
     category: product.category
         ? { id: product.category.id, name: product.category.name }

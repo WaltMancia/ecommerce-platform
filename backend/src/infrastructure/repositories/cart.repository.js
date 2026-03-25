@@ -10,7 +10,7 @@ const cartInclude = {
         {
             model: Product,
             as: 'product',
-            attributes: ['id', 'name', 'slug', 'price', 'stock'],
+            attributes: ['id', 'name', 'slug', 'price', 'stock', 'image_url'],
         },
     ],
 };

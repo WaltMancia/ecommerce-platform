@@ -110,5 +110,31 @@ router.get('/:slug', getProductBySlug);
 router.post('/', authenticate, authorize('admin'), createProductValidator, validate, createProduct);
 router.put('/:id', authenticate, authorize('admin'), updateProductValidator, validate, updateProduct);
 router.delete('/:id', authenticate, authorize('admin'), deleteProduct);
+import { upload } from '../../infrastructure/utils/cloudinary.utils.js';
+
+// Ruta para subir imagen de un producto (solo admin)
+// El middleware upload.single('image') intercepta el archivo
+// antes de llegar al controller
+router.post(
+    '/:id/image',
+    authenticate,
+    authorize('admin'),
+    upload.single('image'),  // 'image' es el nombre del campo en el form
+    async (req, res, next) => {
+        try {
+            if (!req.file) {
+                return res.status(400).json({ message: 'No se envió ninguna imagen' });
+            }
+
+            // req.file.path contiene la URL de Cloudinary tras la subida
+            const updated = await import('../../infrastructure/repositories/product.repository.js')
+                .then(m => m.updateProduct(req.params.id, { image_url: req.file.path }));
+
+            res.json({ imageUrl: req.file.path, product: updated });
+        } catch (error) {
+            next(error);
+        }
+    }
+);
 
 export default router;

@@ -10,6 +10,7 @@ export const cartDTO = (cart) => ({
                 slug: item.product.slug,
                 price: parseFloat(item.product.price),
                 stock: item.product.stock,
+                imageUrl: item.product.imageUrl || null,
             },
             // Calculamos el subtotal por item directamente en el DTO
             subtotal: parseFloat((item.quantity * item.product.price).toFixed(2)),
