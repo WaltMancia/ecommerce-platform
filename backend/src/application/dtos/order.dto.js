@@ -10,7 +10,11 @@ export const orderDTO = (order) => ({
             unitPrice: parseFloat(item.unit_price),
             subtotal: parseFloat((item.quantity * item.unit_price).toFixed(2)),
             product: item.product
-                ? { id: item.product.id, name: item.product.name, imageUrl: item.product.imageUrl || null }
+                ? {
+                    id: item.product.id,
+                    name: item.product.name,
+                    imageUrl: item.product.image_url || null,
+                }
                 : null,
         }))
         : [],

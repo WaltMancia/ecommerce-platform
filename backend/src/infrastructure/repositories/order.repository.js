@@ -5,7 +5,11 @@ import Product from '../database/models/Product.js';
 const orderInclude = {
     model: OrderItem,
     as: 'items',
-    include: [{ model: Product, as: 'product', attributes: ['id', 'name', 'image_url'] }],
+    include: [{
+        model: Product,
+        as: 'product',
+        attributes: ['id', 'name', 'image_url'],
+    }],
 };
 
 export const createOrder = async (orderData, items, transaction) => {

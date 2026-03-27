@@ -32,6 +32,10 @@ module.exports = {
                 type: Sequelize.TEXT,
                 allowNull: true,
             },
+            image_url: {
+                type: DataTypes.STRING(500),
+                allowNull: true,
+            },
             price: {
                 type: Sequelize.DECIMAL(10, 2), // 10 dígitos, 2 decimales. Ej: 99999999.99
                 allowNull: false,
